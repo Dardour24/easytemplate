@@ -346,17 +346,14 @@ services:
     image: langgenius/dify-plugin-daemon:0.2.11
     restart: always
     environment:
-      # Use the shared environment variables.
-      <<: *shared-api-worker-env
-      # Startup mode, 'daemon' starts the plugin daemon.
-      MODE: daemon
+      # URL interne vers le daemon (nom du service + port)
+      PLUGIN_DAEMON_API_BASE_URL: http://plugin_daemon:5002
+      LOG_LEVEL: INFO
     depends_on:
-      - redis
-    networks:
-      - ssrf_proxy_network
-      - default
-    ports:
-      - "5002:5002"
+      - api
+    volumes:
+      - ./volumes/plugin_daemon:/data
+
 
   # The postgres database.
   db:
