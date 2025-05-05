@@ -361,21 +361,7 @@ services:
       TEXT_GENERATION_TIMEOUT_MS: ${TEXT_GENERATION_TIMEOUT_MS:-60000}
       CSP_WHITELIST: ${CSP_WHITELIST:-}
 
-  # Plugin daemon service (ajouté)
-  plugin_daemon:
-    image: langgenius/dify-plugin-daemon:0.2.11
-    restart: always
-    environment:
-      # URL interne vers le daemon (nom du service + port)
-      PLUGIN_DAEMON_API_BASE_URL: http://plugin_daemon:5002
-      LOG_LEVEL: INFO
-    depends_on:
-      - api
-    volumes:
-      - ./volumes/plugin_daemon:/data
-
-
-  # The postgres database.
+    # The postgres database.
   db:
     image: postgres:15-alpine
     restart: always
