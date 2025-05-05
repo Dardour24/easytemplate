@@ -336,7 +336,7 @@ services:
       - default
 
   plugin_daemon:
-    image: langgenius/dify-plugin-daemon:0.2.11
+    image: langgenius/dify-plugin-daemon:latest
     restart: always
     environment:
       PORT: 5002                       # le daemon écoute là
