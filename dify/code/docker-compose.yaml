@@ -345,7 +345,7 @@ services:
       TEXT_GENERATION_TIMEOUT_MS: ${TEXT_GENERATION_TIMEOUT_MS:-60000}
       CSP_WHITELIST: ${CSP_WHITELIST:-}
 
-   plugin_daemon:
+  plugin_daemon:
     image: langgenius/dify-plugin-daemon:0.0.9  # <-- La bonne version
     restart: always
     # Pas de 'environment:' ici selon le guide
