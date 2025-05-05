@@ -298,8 +298,7 @@ services:
       # Use the shared environment variables.
       <<: *shared-api-worker-env
       # Startup mode, 'api' starts the API server.
-      MODE: api
-      PLUGIN_SERVER_ENDPOINT: ""
+      MODE: api     
     depends_on:
       - db
       - redis
@@ -319,8 +318,7 @@ services:
       # Use the shared environment variables.
       <<: *shared-api-worker-env
       # Startup mode, 'worker' starts the Celery worker for processing the queue.
-      MODE: worker
-      PLUGIN_SERVER_ENDPOINT: ""
+      MODE: worker      
     depends_on:
       - db
       - redis
