@@ -290,38 +290,46 @@ x-shared-env: &shared-api-worker-env
   RETRIEVAL_TOP_N: ${RETRIEVAL_TOP_N:-0}
 
 services:
+  # API service
   api:
     image: langgenius/dify-api:1.3.1
     restart: always
     environment:
+      # Use the shared environment variables.
       <<: *shared-api-worker-env
+      # Startup mode, 'api' starts the API server.
       MODE: api
-      PLUGIN_SERVER_ENDPOINT: http://plugin_daemon:5002    # ← ajouté
     depends_on:
       - db
       - redis
-      - plugin_daemon                                       # ← démarre après le daemon
     volumes:
+      # Mount the storage directory to the container, for storing user files.
       - ./volumes/app/storage:/app/api/storage
     networks:
-      - default                                             # ssrf_proxy_network si tu y tiens
+      - ssrf_proxy_network
+      - default
 
+  # worker service
+  # The Celery worker for processing the queue.
   worker:
     image: langgenius/dify-api:1.3.1
     restart: always
     environment:
+      # Use the shared environment variables.
       <<: *shared-api-worker-env
+      # Startup mode, 'worker' starts the Celery worker for processing the queue.
       MODE: worker
-      PLUGIN_SERVER_ENDPOINT: http://plugin_daemon:5002    # ← ajouté
     depends_on:
       - db
       - redis
-      - plugin_daemon
     volumes:
+      # Mount the storage directory to the container, for storing user files.
       - ./volumes/app/storage:/app/api/storage
     networks:
+      - ssrf_proxy_network
       - default
 
+  # Frontend web application.
   web:
     image: langgenius/dify-web:1.3.1
     restart: always
@@ -332,23 +340,8 @@ services:
       NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED:-0}
       TEXT_GENERATION_TIMEOUT_MS: ${TEXT_GENERATION_TIMEOUT_MS:-60000}
       CSP_WHITELIST: ${CSP_WHITELIST:-}
-    networks:
-      - default
 
-  plugin_daemon:
-    image: langgenius/dify-plugin-daemon:latest
-    restart: always
-    environment:
-      PORT: 5002                       # le daemon écoute là
-    depends_on:
-      - db
-      - redis
-    volumes:
-      - ./volumes/plugin_daemon:/data
-    networks:
-      - default  
-
-    # The postgres database.
+  # The postgres database.
   db:
     image: postgres:15-alpine
     restart: always
@@ -387,7 +380,7 @@ services:
 
   # The DifySandbox
   sandbox:
-    image: langgenius/dify-sandbox:0.2.11
+    image: langgenius/dify-sandbox:0.2.10
     restart: always
     environment:
       # The DifySandbox configurations
@@ -703,7 +696,7 @@ services:
       - milvus
 
   milvus-standalone:
-    image: milvusdb/milvus:latest
+    image: milvusdb/milvus:v2.3.1
     profiles:
       - milvus
     command: [ 'milvus', 'run', 'standalone' ]
