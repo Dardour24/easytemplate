@@ -299,7 +299,7 @@ services:
       <<: *shared-api-worker-env
       # Startup mode, 'api' starts the API server.
       MODE: api
-      PLUGIN_DAEMON_API_BASE_URL: http://plugin_daemon:5002
+      PLUGIN_SERVER_ENDPOINT: http://plugin_daemon:5002
     depends_on:
       - db
       - redis
@@ -321,7 +321,7 @@ services:
       <<: *shared-api-worker-env
       # Startup mode, 'worker' starts the Celery worker for processing the queue.
       MODE: worker
-      PLUGIN_DAEMON_API_BASE_URL: http://plugin_daemon:5002
+      PLUGIN_SERVER_ENDPOINT: http://plugin_daemon:5002
     depends_on:
       - db
       - redis
