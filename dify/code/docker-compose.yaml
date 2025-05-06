@@ -383,7 +383,7 @@ services:
       test: [ 'CMD', 'redis-cli', 'ping' ]
 
   plugin_daemon:
-    image: langgenius/dify-plugin-daemon:0.0.9
+    image: langgenius/dify-plugin-daemon:0.0.8
     environment:
       - PYTHON_INTERPRETER_PATH=/usr/bin/python3.11
       - PLUGIN_STORAGE_TYPE=local
