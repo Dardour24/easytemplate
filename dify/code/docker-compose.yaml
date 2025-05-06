@@ -382,7 +382,7 @@ services:
     healthcheck:
       test: [ 'CMD', 'redis-cli', 'ping' ]
 
-plugin_daemon:
+  plugin_daemon:
     image: langgenius/dify-plugin-daemon:0.0.9
     environment:
       - PYTHON_INTERPRETER_PATH=/usr/bin/python3.11
