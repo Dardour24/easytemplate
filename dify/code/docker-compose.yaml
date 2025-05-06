@@ -344,19 +344,22 @@ services:
       NEXT_TELEMETRY_DISABLED: ${NEXT_TELEMETRY_DISABLED:-0}
       TEXT_GENERATION_TIMEOUT_MS: ${TEXT_GENERATION_TIMEOUT_MS:-60000}
       CSP_WHITELIST: ${CSP_WHITELIST:-}
-
+      
   plugin_daemon:
-    image: langgenius/dify-plugin-daemon:0.0.9  # <-- La bonne version
-    restart: always
-    # Pas de 'environment:' ici selon le guide
-    depends_on: # <-- Ajouté pour être cohérent avec l'original
-      - db
-      - redis
+    image: langgenius/dify-plugin-daemon:0.0.9
+    environment:
+      - PYTHON_INTERPRETER_PATH=/usr/bin/python3.11
+      - PLUGIN_STORAGE_TYPE=local
+      - PLUGIN_INSTALLED_PATH=/app/plugins
+      - SERVER_PORT=8000
+      - DIFY_INNER_API_URL=http://api:5001
+      - DIFY_INNER_API_KEY=ta_clé_api_dify
+    ports:
+      - "8000:8000"
     volumes:
-      - ./volumes/plugin_daemon:/data
-    networks: # <-- Important pour communiquer
-      - default   
-
+      - ./plugins:/app/plugins
+    restart: unless-stopped
+  
   # The postgres database.
   db:
     image: postgres:15-alpine
